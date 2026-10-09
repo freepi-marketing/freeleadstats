@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Freeleads Quincena 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap">
+</head>
+<body>
+<style>
+/* layout: bento de 12 columnas sobre canvas claro; tarjetas blancas con hairline; tinta oxford blue, rosa/sunglow/sapphire solo como acentos de dato */
+:root{
+  --canvas:#f6f6f8; --paper:#ffffff; --surface-alt:#fafafb; --ink:#011126; --ink-soft:#0a2a4d;
+  --mid:#6b7280; --hairline:#e6e7eb; --ember:#d92d20; --track:#f0f1f4;
+  --brand-rose:#F04DA1; --brand-sun:#FFCA3D; --brand-sapphire:#0057AD;
+  --grad:linear-gradient(100deg,#F04DA1 0%,#FFCA3D 100%);
+  /* alias usados por las gráficas */
+  --rose:#F04DA1; --sapphire:#0057AD; --muted:#8a919c; --line:#e6e7eb; --tile:#ffffff; --band:rgba(255,202,61,.20);
+  --ink-2:#3d4a5c; --crit:#d92d20; --good:#011126;
+  --card-shadow:0 0 0 1px rgba(23,23,23,.05),0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);
+  --font:"Poppins",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--font);font-weight:300;font-size:14px;line-height:1.55;padding-block:40px 64px;padding-inline:16px}
+.wrap{max-width:1280px;margin:0 auto;display:grid;gap:16px}
+h1,h2,h3{font-weight:700;margin:0;text-wrap:balance}
+.eyebrow{font-size:12px;line-height:1.33;letter-spacing:.03em;text-transform:lowercase;color:var(--mid);font-weight:500}
+.num{font-variant-numeric:tabular-nums}
+
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:8px}
+header.top h1{font-size:clamp(28px,4.2vw,44px);line-height:1.1;letter-spacing:-.03em;margin-top:6px}
+header.top h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:18px;padding:2px 10px;height:24px;font-size:12px;font-weight:500;background:var(--paper);border:1px solid var(--hairline);color:var(--ink)}
+.pill.solid{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.crit{color:var(--ember)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.tile{background:var(--paper);border:1px solid var(--hairline);border-radius:24px;box-shadow:var(--card-shadow);padding:20px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+@media (max-width:980px){.c3{grid-column:span 6}.c4,.c5,.c6,.c7,.c8{grid-column:span 12}}
+@media (max-width:560px){.c3{grid-column:span 12}}
+.tile h3{font-size:18px;line-height:1.33;letter-spacing:-.025em}
+.big{font-size:clamp(30px,4vw,36px);font-weight:700;line-height:1.11;letter-spacing:-.025em}
+.sub{color:var(--mid);font-size:14px;line-height:1.43}
+
+/* hero */
+.hero .big{font-size:clamp(48px,7vw,72px);letter-spacing:-.04em;line-height:1}
+.hero-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 24px}
+.from{font-size:18px;color:var(--mid);font-weight:400}
+.from b{color:var(--ink);font-weight:700}
+.bar{height:10px;border-radius:18px;background:var(--track);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;border-radius:18px;background:var(--grad)}
+.bar .t{position:absolute;top:0;bottom:0;width:2px;background:var(--ink)}
+.legend-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font-size:12px;color:var(--mid)}
+
+.split,.cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.split div,.cmp div{border-radius:10px;background:var(--surface-alt);border:1px solid var(--hairline);padding:12px}
+.split b,.cmp b{display:block;font-size:30px;font-weight:700;line-height:1.2;letter-spacing:-.025em}
+
+.pace{display:grid;gap:12px}
+.pace-row{display:grid;grid-template-columns:90px 1fr 60px;align-items:center;gap:10px;font-size:13px}
+.pace-track{height:8px;border-radius:18px;background:var(--track);overflow:hidden}
+.pace-track i{display:block;height:100%;border-radius:18px}
+
+.chart-wrap{position:relative}
+svg text{font-family:var(--font)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;font-weight:500;padding:4px 10px;border-radius:18px;white-space:nowrap;transform:translate(-50%,-125%);opacity:0;transition:opacity .15s;z-index:2}
+.tip.on{opacity:1}
+.keys{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--mid)}
+.key{display:inline-flex;align-items:center;gap:6px}
+.key s{display:inline-block;width:18px;height:0;border-top:2px solid currentColor}
+.key q{display:inline-block;width:12px;height:12px;border-radius:4px;background:currentColor}
+.key q.band{background:var(--band);outline:1px solid rgba(255,202,61,.6)}
+
+.funnel{display:grid;gap:10px}
+.fstep{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:13px}
+.fstep .ft{height:8px;border-radius:18px;background:var(--track);grid-column:1 / -1;overflow:hidden}
+.fstep .ft i{display:block;height:100%;border-radius:18px}
+.fstep b{font-weight:600}
+
+.tbl{overflow-x:auto;margin-inline:-4px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:680px}
+th{font-weight:500;font-size:12px;color:var(--mid);text-align:right;padding:8px;border-bottom:1px solid var(--hairline);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:12px 8px;border-bottom:1px solid var(--hairline);text-align:right;font-variant-numeric:tabular-nums;vertical-align:top}
+tr:last-child td{border-bottom:0}
+td a{color:var(--ink);font-weight:500;text-decoration:none}
+td a:hover{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--brand-rose)}
+td small{display:block;color:var(--mid);font-size:12px;font-weight:400}
+.hl{font-weight:600;color:var(--brand-rose)}
+.tag{display:inline-block;font-size:12px;font-weight:500;border-radius:18px;padding:0 8px;margin-top:4px;background:var(--canvas);color:var(--ink-soft)}
+
+.camp{background:linear-gradient(135deg,#FEF1F8 0%,#FFFAEC 100%)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;border-radius:18px;padding:2px 8px;border:1px solid var(--hairline);background:var(--paper);color:var(--ink);font-weight:500}
+ol.pilares{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2);display:grid;gap:4px}
+
+.ads{display:grid}
+.ad{display:grid;grid-template-columns:1fr auto;gap:0 10px;font-size:14px;padding:10px 0;border-top:1px solid var(--hairline)}
+.ad:first-child{border-top:0}
+.ad .nm{font-weight:600}
+.ad .st{color:var(--mid);font-size:12px}
+.ad .vv{text-align:right;font-weight:500}
+
+.empty{border:1px dashed var(--hairline);background:var(--surface-alt);border-radius:10px;padding:12px;font-size:13px;color:var(--mid)}
+ul.next{margin:0;padding:0;list-style:none;display:grid;gap:12px;font-size:14px}
+ul.next li{display:grid;grid-template-columns:22px 1fr;gap:10px}
+ul.next li b{font-weight:600}
+.n{width:22px;height:22px;border-radius:18px;background:var(--grad);color:var(--ink);font-size:12px;font-weight:700;display:grid;place-items:center}
+.hist-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px}
+.hist-t td:first-child{color:var(--ink-2)}
+.hist-t th.cur,.hist-t td.cur{font-weight:600;color:var(--ink)}
+.hist-t td.dl{font-weight:500;white-space:nowrap}
+.dl.up{color:#0f7a43}.dl.down{color:var(--ember)}.dl.flat{color:var(--mid)}
+.hist-t tr.grp td{font-size:12px;color:var(--mid);font-weight:500;padding-top:16px;border-bottom:1px solid var(--hairline)}
+footer{font-size:12px;color:var(--mid);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;padding-top:8px}
+a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--brand-rose);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">reporte quincenal · comunidad y alcance · freeleads</div>
+      <h1>quincena 1 de <span>la dueña insustituible</span></h1>
+    </div>
+    <div class="meta">
+      <span class="pill">21 sep – 5 oct 2026</span>
+      <span class="pill solid">pauta activa 28 sep – 5 oct</span>
+      <span class="pill crit"><span class="dot"></span>instagram debajo del ritmo de la meta</span>
+    </div>
+  </header>
+
+  <section class="bento">
+    <!-- HERO: seguidores IG -->
+    <article class="tile hero c8">
+      <div class="eyebrow">seguidores en instagram · la meta de la campaña</div>
+      <div class="hero-row">
+        <div class="big num">86</div>
+        <div class="from num">empezamos en <b>17</b> · <b>+69</b> en la quincena</div>
+      </div>
+      <div class="sub">meta: 1,500 seguidores en instagram al 22 nov</div>
+      <div class="bar" role="img" aria-label="86 de 1500 seguidores, 5.7% de la meta; 23% del tiempo transcurrido">
+        <i style="width:5.7%"></i>
+        <span class="t" style="left:23%"></span>
+      </div>
+      <div class="legend-row num">
+        <span>86 de 1,500 = 5.7% de la meta</span>
+        <span>marca = 23% del tiempo ya pasó (14 de 61 días)</span>
+      </div>
+    </article>
+
+    <!-- comunidad total -->
+    <article class="tile c4">
+      <div class="eyebrow">comunidad nueva en la quincena</div>
+      <div class="big num">+206</div>
+      <div class="split num">
+        <div><span class="sub">instagram</span><b>+69</b><span class="sub">seguidores</span></div>
+        <div><span class="sub">facebook</span><b>+137</b><span class="sub">netos · 141 nuevos, 4 se fueron</span></div>
+      </div>
+      <div class="sub">facebook creció el doble que instagram, y casi todo llegó con la pauta del 28 sep en adelante.</div>
+    </article>
+
+    <!-- visitas IG por día -->
+    <article class="tile c8">
+      <div class="eyebrow">visitas al perfil de instagram por día</div>
+      <h3>la pauta multiplicó las visitas al perfil por 100</h3>
+      <div class="keys">
+        <span class="key" style="color:var(--rose)"><q></q>visitas al perfil</span>
+        <span class="key" style="color:var(--ink-2)"><q class="band"></q>días con anuncios activos</span>
+      </div>
+      <div class="chart-wrap" id="cw1">
+        <svg id="visits" viewBox="0 0 680 230" width="100%" role="img" aria-label="Visitas al perfil de Instagram por día del 21 de septiembre al 5 de octubre. Sin anuncios de 1 a 3 por día; con anuncios de 254 a 550 por día."></svg>
+        <div class="tip" id="tip1"></div>
+      </div>
+      <div class="sub num">2,818 visitas en la quincena. del 23 al 27 sep, sin anuncios, fueron de 1 a 3 por día.</div>
+    </article>
+
+    <!-- embudo -->
+    <article class="tile c4">
+      <div class="eyebrow">de visita a seguidor</div>
+      <h3>la pauta corrió casi toda en facebook</h3>
+      <div class="funnel num">
+        <div class="fstep"><span>visitas al perfil ig</span><b>2,818</b><div class="ft"><i style="width:100%;background:var(--rose)"></i></div></div>
+        <div class="fstep"><span>nuevos seguidores ig</span><b>69 · 2.4%</b><div class="ft"><i style="width:2.4%;min-width:6px;background:var(--rose)"></i></div></div>
+        <div class="fstep"><span>visitas a la página fb</span><b>1,158</b><div class="ft"><i style="width:41%;background:var(--sapphire)"></i></div></div>
+        <div class="fstep"><span>nuevos seguidores fb</span><b>141 · 12.2%</b><div class="ft"><i style="width:5%;background:var(--sapphire)"></i></div></div>
+      </div>
+      <div class="sub">de cada 100 visitas al perfil de instagram, 2 se volvieron seguidores; en facebook, 12. el 99% del gasto se mostró en facebook: la gente veía el anuncio ahí y saltaba a instagram, donde seguir cuesta más.</div>
+    </article>
+
+    <!-- KPIs de alcance -->
+    <article class="tile c3">
+      <div class="eyebrow">alcance pagado</div>
+      <div class="big num">58.7k</div>
+      <div class="sub">cuentas alcanzadas por las 2 campañas (55,304 + 3,427; puede haber cuentas repetidas)</div>
+    </article>
+    <article class="tile c3">
+      <div class="eyebrow">visualizaciones · instagram</div>
+      <div class="big num">5,976</div>
+      <div class="sub">del contenido de la cuenta en la quincena</div>
+    </article>
+    <article class="tile c3">
+      <div class="eyebrow">visualizaciones · facebook</div>
+      <div class="big num">88.6k</div>
+      <div class="sub">99.5% de no seguidores. aquí se fue casi toda la pauta.</div>
+    </article>
+    <article class="tile c3">
+      <div class="eyebrow">inversión total</div>
+      <div class="big num">$1,920</div>
+      <div class="sub num">mxn · ~$9.30 por seguidor nuevo (ig + fb)</div>
+    </article>
+
+    <!-- ritmo -->
+    <article class="tile c4">
+      <div class="eyebrow">ritmo diario en instagram</div>
+      <h3>hay que crecer 6 veces más rápido</h3>
+      <div class="pace">
+        <div class="pace-row num"><span>hoy</span><div class="pace-track"><i style="width:16%;background:var(--rose)"></i></div><b>4.9/día</b></div>
+        <div class="pace-row num"><span>necesario</span><div class="pace-track"><i style="width:100%;background:var(--sapphire)"></i></div><b>30/día</b></div>
+      </div>
+      <div class="sub num">faltan 1,414 seguidores en 47 días. a este ritmo cerraríamos el 22 nov cerca de 318.</div>
+    </article>
+
+    <!-- trayectoria -->
+    <article class="tile c8">
+      <div class="eyebrow">trayectoria hacia la meta · instagram</div>
+      <div class="keys">
+        <span class="key" style="color:var(--rose)"><s></s>real</span>
+        <span class="key" style="color:var(--muted)"><s style="border-top-style:dashed"></s>proyección a ritmo actual</span>
+        <span class="key" style="color:var(--sapphire)"><s></s>meta (línea recta a 1,500)</span>
+      </div>
+      <div class="chart-wrap" id="cw2">
+        <svg id="traj" viewBox="0 0 680 210" width="100%" role="img" aria-label="Seguidores de Instagram: 17 el 22 sep, 86 el 6 oct. Meta 1,500 el 22 nov; proyección a ritmo actual 318."></svg>
+        <div class="tip" id="tip2"></div>
+      </div>
+    </article>
+
+    <!-- piezas -->
+    <article class="tile c12">
+      <div class="eyebrow">piezas de la quincena · instagram + facebook</div>
+      <h3>3 reels y 2 historias. meta cuenta 4 reels porque el del 24 sep se subió por separado a cada red.</h3>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>pieza</th><th>visualizaciones</th><th>alcance</th><th>interacciones</th><th>likes</th><th>coment.</th><th>compart.</th><th>guardados</th><th>seguimientos</th><th>reproducción prom.</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://www.instagram.com/reel/DdrYWrEAIex/" target="_blank" rel="noopener">si mañana no te conectas, ¿quién responde por ti?</a><small>24 sep · solo instagram</small><span class="tag">474 del alcance vino de anuncio</span></td><td>284</td><td>552</td><td>18</td><td>14</td><td>2</td><td>–</td><td>–</td><td>–</td><td class="hl">22 s</td></tr>
+            <tr><td>si mañana no te conectas, ¿quién responde por ti?<small>24 sep · solo facebook</small></td><td>304</td><td>263</td><td>15</td><td>13</td><td>1</td><td>0</td><td>1</td><td class="hl">5</td><td>6 s</td></tr>
+            <tr><td><a href="https://www.instagram.com/reel/Ddz1DM6RWu0/" target="_blank" rel="noopener">freeleads es donde por fin escribes tu receta</a><small>27 sep · ig + fb (682 vistas en ig)</small></td><td class="hl">980</td><td>279</td><td class="hl">39</td><td>24</td><td>2</td><td class="hl">3</td><td class="hl">9</td><td>3</td><td>5 s</td></tr>
+            <tr><td><a href="https://www.instagram.com/reel/Dd4-GlhxvxT/" target="_blank" rel="noopener">¿cómo se vería eiryn ai en una empresa de catering?</a><small>29 sep · ig + fb (93 vistas en ig)</small></td><td>402</td><td>290</td><td>30</td><td>24</td><td>1</td><td>0</td><td>5</td><td>0</td><td>5 s</td></tr>
+            <tr><td>historias<small>27 y 29 sep · instagram</small></td><td>15</td><td>–</td><td>6</td><td>6</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub">"la receta" es la pieza más fuerte: más vistas, más guardados y más compartidos. el reel del 24 sep en instagram se vio en promedio 22 s, 4 veces más que los demás. no hay publicaciones del 30 sep al 5 oct.</div>
+    </article>
+
+    <!-- anuncios -->
+    <article class="tile c6">
+      <div class="eyebrow">pauta · objetivo: visitas al perfil de instagram</div>
+      <h3>$1,852 de $1,876 se mostraron en facebook</h3>
+      <div class="ads num">
+        <div class="ad"><div><div class="nm">ALC - MOLE</div><div class="st">28 sep – 5 oct · 48,178 de alcance</div></div><div class="vv">$1,567.98<div class="st">1,191 visitas · $1.32</div></div></div>
+        <div class="ad"><div><div class="nm">ALC - INV</div><div class="st">28 sep – 5 oct · 11,284 de alcance</div></div><div class="vv">$262.42<div class="st">269 visitas · <b>$0.98</b></div></div></div>
+        <div class="ad"><div><div class="nm">ALC - HALF</div><div class="st">28 sep – 5 oct · 466 de alcance</div></div><div class="vv">$45.54<div class="st">4 visitas · <span style="color:var(--ember)">$11.39</span></div></div></div>
+        <div class="ad"><div><div class="nm">AGO - 003</div><div class="st">21–22 sep · 3,427 de alcance · otra cuenta</div></div><div class="vv">$44.02<div class="st">55 visitas · $0.80</div></div></div>
+      </div>
+      <div class="sub">solo $24 (1.3%) se mostraron en instagram, con 611 cuentas alcanzadas. todo está en pausa desde el 5 oct. INV salió más barato por visita que MOLE; HALF no funcionó.</div>
+    </article>
+
+    <!-- interacción -->
+    <article class="tile c6">
+      <div class="eyebrow">interacción por pieza en instagram</div>
+      <h3>las piezas nuevas mueven 3 veces más</h3>
+      <div class="cmp num">
+        <div><span class="sub">antes (25 ago – 3 sep, 5 piezas)</span><b>3.8</b><span class="sub">likes promedio · 0 comentarios</span></div>
+        <div><span class="sub">esta quincena (3 reels)</span><b>12.7</b><span class="sub">likes promedio · 4 comentarios</span></div>
+      </div>
+      <div class="sub">la pregunta abierta al cierre ya trajo comentarios en 2 de 3 piezas. con "comenta DEMO" no había ninguno.</div>
+    </article>
+
+    <!-- campaña -->
+    <article class="tile camp c4">
+      <div class="eyebrow">campaña activa</div>
+      <h3>la dueña insustituible</h3>
+      <div class="sub" style="color:var(--ink-2)">para la dueña cuyo criterio para cerrar vive solo en su cabeza, y por eso su equipo no cierra como ella. catering, clínicas y viajes.</div>
+      <div class="chips">
+        <span class="chip">tofu</span><span class="chip">ig + tiktok</span><span class="chip">4 piezas/semana</span><span class="chip">cta: pregunta abierta</span><span class="chip">22 sep – 22 nov</span>
+      </div>
+      <ol class="pilares">
+        <li>el dolor central: nadie cierra como ella</li>
+        <li>la prueba en vivo: se muestra funcionando</li>
+        <li>eiryn ai aprende el negocio</li>
+        <li>la voz de euni, que ya vivió esto</li>
+      </ol>
+    </article>
+
+    <!-- tiktok -->
+    <article class="tile c4">
+      <div class="eyebrow">tiktok · @freepiio (cuenta compartida con freepi)</div>
+      <div class="big num">78 <span style="font-size:.45em;color:var(--mid);font-weight:400">seguidores</span></div>
+      <div class="split num">
+        <div><span class="sub">vistas de los 3 reels</span><b>1,576</b><span class="sub">525 por reel</span></div>
+        <div><span class="sub">4 reels anteriores</span><b>462</b><span class="sub">vistas por reel</span></div>
+      </div>
+      <div class="sub">en tiktok el de catering fue el más visto (682) y "la receta" el segundo (626). no hay corte de seguidores del 22 sep, así que el crecimiento se mide desde la quincena 2.</div>
+      <div class="eyebrow" style="margin-top:4px">cadencia</div>
+      <div class="big num">3<span style="font-size:.45em;color:var(--mid)"> / 8 reels</span></div>
+      <div class="sub">el plan pide 4 piezas por semana</div>
+    </article>
+
+    <!-- siguientes pasos -->
+    <article class="tile c4">
+      <div class="eyebrow">para la quincena 2 (6 – 20 oct)</div>
+      <h3>qué mover</h3>
+      <ul class="next">
+        <li><span class="n">1</span><span><b>pautar en instagram, no en facebook.</b> dejar solo ubicaciones de instagram (reels, feed, explorar) para que el anuncio y el botón de seguir estén en la misma app. y ajustar la bio para que diga qué gana quien sigue.</span></li>
+        <li><span class="n">2</span><span><b>volver a 4 piezas por semana.</b> la pauta trae gente al perfil y el perfil no tiene nada nuevo desde el 29 sep.</span></li>
+        <li><span class="n">3</span><span><b>pautar con INV o con "la receta".</b> INV dio la visita más barata y "la receta" fue la pieza orgánica con más guardados. apagar HALF.</span></li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- historial -->
+  <section class="tile hist" id="historial" aria-labelledby="h-hist">
+    <div class="hist-head">
+      <div>
+        <div class="eyebrow">historial</div>
+        <h3 id="h-hist">quincena contra quincena</h3>
+      </div>
+      <span class="pill" id="hist-state">cargando historial…</span>
+    </div>
+    <div class="tbl"><table id="hist-table" class="hist-t"><thead></thead><tbody></tbody></table></div>
+    <div class="empty" id="hist-empty" hidden>todavía no hay quincenas guardadas. cada corte quincenal se agrega aquí y se compara con el anterior.</div>
+    <div class="sub" id="hist-note"></div>
+  </section>
+
+  <footer>
+    <span>fuentes: meta business suite (estadísticas de instagram y facebook, 21 sep – 5 oct), meta ads (cuentas Freepi Ads y Freeleads - ADS), perfil de instagram y tiktok @freepiio (6–7 oct), bóveda freepi knowledge</span>
+    <span>freeleads.io · CDMX 55 3440 2130</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  function mk(svg){return (n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e}}
+  function hover(svg,tip,el,txt,cx,cy,W){
+    const show=()=>{const r=svg.getBoundingClientRect(),s=r.width/W;tip.textContent=txt;tip.style.left=Math.min(Math.max(cx*s,80),r.width-80)+'px';tip.style.top=(cy*s)+'px';tip.classList.add('on')};
+    const hide=()=>tip.classList.remove('on');
+    el.addEventListener('mouseenter',show);el.addEventListener('focus',show);el.addEventListener('mouseleave',hide);el.addEventListener('blur',hide);
+  }
+
+  /* visitas al perfil IG por día, 21 sep – 5 oct */
+  const visits=[44,14,1,3,2,1,2,76,254,262,509,316,339,445,550];
+  const ads=[1,1,0,0,0,0,0,1,1,1,1,1,1,1,1];
+  function drawVisits(){
+    const svg=document.getElementById('visits'),tip=document.getElementById('tip1');svg.innerHTML='';const el=mk(svg);
+    const W=680,H=230,L=40,R=8,T=12,B=28,n=visits.length,max=600;
+    const bw=(W-L-R)/n,y=v=>T+(1-v/max)*(H-T-B);
+    const line=css('--line'),muted=css('--muted'),rose=css('--rose'),band=css('--band'),ink=css('--ink');
+    ads.forEach((a,i)=>{if(a)el('rect',{x:L+i*bw,y:T,width:bw,height:H-T-B,fill:band})});
+    [0,200,400,600].forEach(v=>{el('line',{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke:line,'stroke-width':1});const t=el('text',{x:L-8,y:y(v)+4,'text-anchor':'end','font-size':11,fill:muted});t.textContent=v});
+    visits.forEach((v,i)=>{
+      const d=new Date(Date.UTC(2026,8,21+i)),lbl=d.getUTCDate()+' '+MES[d.getUTCMonth()];
+      const x=L+i*bw+bw*.18,w=bw*.64,h=Math.max(H-B-y(v),2);
+      el('path',{d:`M${x},${H-B} V${H-B-h+4} Q${x},${H-B-h} ${x+4},${H-B-h} H${x+w-4} Q${x+w},${H-B-h} ${x+w},${H-B-h+4} V${H-B} Z`,fill:rose});
+      if(i%2===0){const t=el('text',{x:x+w/2,y:H-9,'text-anchor':'middle','font-size':10.5,fill:muted});t.textContent=d.getUTCDate()+(i===0||d.getUTCDate()===1?' '+MES[d.getUTCMonth()]:'')}
+      if(i===n-1){const t=el('text',{x:x+w/2,y:y(v)-6,'text-anchor':'middle','font-size':11,'font-weight':600,fill:ink});t.textContent=v}
+      const hit=el('rect',{x:L+i*bw,y:T,width:bw,height:H-T-B,fill:'transparent',tabindex:0,'aria-label':lbl+': '+v+' visitas'});
+      hover(svg,tip,hit,lbl+' · '+v+' visitas'+(ads[i]?' · con anuncios':''),x+w/2,y(v),W);
+    });
+  }
+
+  /* trayectoria */
+  function drawTraj(){
+    const svg=document.getElementById('traj'),tip=document.getElementById('tip2');svg.innerHTML='';const el=mk(svg);
+    const W=680,H=210,L=48,R=16,T=14,B=28,span=61;
+    const x=d=>L+(d/span)*(W-L-R),y=v=>T+(1-v/1500)*(H-T-B);
+    const fmt=d=>{const t=new Date(Date.UTC(2026,8,22+d));return t.getUTCDate()+' '+MES[t.getUTCMonth()]};
+    const line=css('--line'),muted=css('--muted'),rose=css('--rose'),sap=css('--sapphire'),tile=css('--tile'),ink=css('--ink');
+    [0,500,1000,1500].forEach(v=>{el('line',{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke:line,'stroke-width':1});const t=el('text',{x:L-8,y:y(v)+4,'text-anchor':'end','font-size':11,fill:muted});t.textContent=v.toLocaleString('es-MX')});
+    [0,14,30,45,61].forEach(d=>{const t=el('text',{x:x(d),y:H-8,'text-anchor':d===0?'start':d===61?'end':'middle','font-size':11,fill:muted});t.textContent=fmt(d)});
+    el('line',{x1:x(0),y1:y(17),x2:x(61),y2:y(1500),stroke:sap,'stroke-width':2,'stroke-linecap':'round'});
+    el('line',{x1:x(14),y1:y(86),x2:x(61),y2:y(318),stroke:muted,'stroke-width':2,'stroke-dasharray':'5 5','stroke-linecap':'round'});
+    el('line',{x1:x(0),y1:y(17),x2:x(14),y2:y(86),stroke:rose,'stroke-width':2.5,'stroke-linecap':'round'});
+    const lab=(t,xx,yy,a)=>{const e=el('text',{x:xx,y:yy,'font-size':11,'font-weight':600,fill:ink,'text-anchor':a||'start'});e.textContent=t};
+    lab('1,500',x(61)-4,y(1500)+16,'end');lab('~318',x(61)-4,y(318)-8,'end');lab('86',x(14)+8,y(86)-8);
+    [{d:0,v:17,t:'22 sep · 17 seguidores (arranque)',c:rose},{d:14,v:86,t:'6 oct · 86 seguidores',c:rose},{d:14,v:357,t:'6 oct · la meta pedía ~357',c:sap},{d:61,v:1500,t:'22 nov · meta 1,500',c:sap},{d:61,v:318,t:'22 nov · ~318 a ritmo actual',c:muted}].forEach(p=>{
+      el('circle',{cx:x(p.d),cy:y(p.v),r:5,fill:p.c,stroke:tile,'stroke-width':2});
+      const h=el('circle',{cx:x(p.d),cy:y(p.v),r:14,fill:'transparent',tabindex:0,'aria-label':p.t});
+      hover(svg,tip,h,p.t,x(p.d),y(p.v),W);
+    });
+  }
+  function draw(){drawVisits();drawTraj()}
+  draw();
+  try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw)}catch(e){}
+  new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+})();
+</script>
+<script>
+(function(){
+  const ROWS=[
+    {g:'comunidad'},
+    {k:'ig_seguidores',l:'seguidores instagram (cierre)'},
+    {k:'ig_nuevos',l:'seguidores nuevos instagram',sign:true},
+    {k:'fb_nuevos_netos',l:'seguidores nuevos facebook (netos)',sign:true},
+    {k:'tt_seguidores',l:'seguidores tiktok (cierre)'},
+    {g:'alcance'},
+    {k:'ig_visitas_perfil',l:'visitas al perfil instagram'},
+    {k:'ig_vistas',l:'visualizaciones instagram'},
+    {k:'fb_vistas',l:'visualizaciones facebook'},
+    {k:'tt_vistas_piezas',l:'vistas tiktok de las piezas'},
+    {k:'alcance_pagado',l:'alcance pagado'},
+    {g:'contenido'},
+    {k:'piezas',l:'reels publicados'},
+    {k:'ig_interacciones',l:'interacciones instagram'},
+    {g:'inversión'},
+    {k:'inversion',l:'inversión en pauta (mxn)',money:true,lowerBetter:false},
+    {k:'_cps',l:'costo por seguidor nuevo (ig + fb)',money:true,lowerBetter:true,calc:q=>{const n=(q.ig_nuevos||0)+(q.fb_nuevos_netos||0);return q.inversion!=null&&n>0?q.inversion/n:null}},
+  ];
+  const fmt=(v,r)=>v==null?'–':(r.money?'$'+v.toLocaleString('es-MX',{minimumFractionDigits:v<100?2:0,maximumFractionDigits:v<100?2:0}):(r.sign&&v>0?'+':'')+Math.round(v).toLocaleString('es-MX'));
+  const val=(q,r)=>r.calc?r.calc(q):(q[r.k]??null);
+  const $=id=>document.getElementById(id);
+  function render(qs){
+    const t=$('hist-table'),st=$('hist-state');
+    if(!qs.length){t.hidden=true;$('hist-empty').hidden=false;st.textContent='sin cortes guardados';return}
+    t.hidden=false;$('hist-empty').hidden=true;
+    st.textContent=qs.length+(qs.length===1?' quincena guardada':' quincenas guardadas');
+    const last=qs.length-1;
+    t.tHead.innerHTML='';t.tBodies[0].innerHTML='';
+    const hr=t.tHead.insertRow();
+    const th=(txt,cls)=>{const e=document.createElement('th');e.textContent=txt;if(cls)e.className=cls;hr.appendChild(e)};
+    th('métrica');qs.forEach((q,i)=>th(q.label||q.id,i===last?'cur':''));if(qs.length>1)th('cambio');
+    ROWS.forEach(r=>{
+      const tr=t.tBodies[0].insertRow();
+      if(r.g){tr.className='grp';const c=tr.insertCell();c.colSpan=qs.length+2;c.textContent=r.g;return}
+      tr.insertCell().textContent=r.l;
+      qs.forEach((q,i)=>{const c=tr.insertCell();c.textContent=fmt(val(q,r),r);if(i===last)c.className='cur'});
+      if(qs.length>1){
+        const a=val(qs[last-1],r),b=val(qs[last],r),c=tr.insertCell();c.className='dl';
+        if(a==null||b==null){c.textContent='–';c.classList.add('flat')}
+        else if(a===0){c.textContent=b===0?'=':'nuevo';c.classList.add(b===0?'flat':(r.lowerBetter?'down':'up'))}
+        else{const p=(b-a)/Math.abs(a)*100,good=r.lowerBetter?p<0:p>0;c.textContent=(p>0?'↑ ':p<0?'↓ ':'')+Math.abs(p).toLocaleString('es-MX',{maximumFractionDigits:p>-10&&p<10?1:0})+'%';c.classList.add(Math.abs(p)<.5?'flat':good?'up':'down')}
+      }
+    });
+    const notes=qs.filter(q=>q.nota).map(q=>(q.label||q.id)+': '+q.nota);
+    $('hist-note').textContent=notes.join(' · ');
+  }
+  (async()=>{
+    const db=await (window.claude?.use?.('db')??null);
+    if(!db){
+      try{const r=await fetch('datos/quincenas.json',{cache:'no-store'});if(!r.ok)throw 0;const qs=await r.json();render(qs.sort((a,b)=>a.orden-b.orden))}
+      catch(e){$('hist-state').textContent='historial no disponible en esta vista';$('hist-empty').hidden=false;$('hist-table').hidden=true}
+      return}
+    db.collection('quincenas').orderBy('orden','asc').onSnapshot(
+      snap=>render(snap.docs.map(d=>({id:d.id,...d.data()}))),
+      ()=>{$('hist-state').textContent='no se pudo leer el historial'}
+    );
+  })();
+})();
+</script>
+
+</body>
+</html>

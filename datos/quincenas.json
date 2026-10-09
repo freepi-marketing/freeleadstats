@@ -1,0 +1,42 @@
+[
+  {
+    "id": "2026-09-06",
+    "orden": 0,
+    "label": "q0 · 6–20 sep",
+    "desde": "2026-09-06",
+    "hasta": "2026-09-20",
+    "ig_seguidores": 17,
+    "ig_nuevos": null,
+    "fb_nuevos_netos": 0,
+    "tt_seguidores": null,
+    "ig_visitas_perfil": 329,
+    "ig_vistas": 23774,
+    "fb_vistas": 189,
+    "tt_vistas_piezas": null,
+    "alcance_pagado": 18075,
+    "piezas": 0,
+    "ig_interacciones": 0,
+    "inversion": 260.58,
+    "nota": "antes de la campaña; métricas de instagram y facebook desde el 8 sep; 17 seguidores es el corte del 22 sep"
+  },
+  {
+    "id": "2026-09-21",
+    "orden": 1,
+    "label": "q1 · 21 sep–5 oct",
+    "desde": "2026-09-21",
+    "hasta": "2026-10-05",
+    "ig_seguidores": 86,
+    "ig_nuevos": 69,
+    "fb_nuevos_netos": 137,
+    "tt_seguidores": 78,
+    "ig_visitas_perfil": 2818,
+    "ig_vistas": 5976,
+    "fb_vistas": 88613,
+    "tt_vistas_piezas": 1576,
+    "alcance_pagado": 58731,
+    "piezas": 3,
+    "ig_interacciones": 93,
+    "inversion": 1919.96,
+    "nota": "seguidores de instagram y tiktok cortados el 6–7 oct; pauta casi toda en facebook"
+  }
+]
